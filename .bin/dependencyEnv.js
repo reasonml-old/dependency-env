@@ -13,7 +13,7 @@ var curDir = process.argv.slice(2)[0];
 
 const KEYS = [
   'dependencies',
-  // 'devDependencies',
+  'optDependencies',
   'peerDependencies',
 ];
 
@@ -30,10 +30,19 @@ function traverseSync(filename, handler) {
     ).forEach(function(dependency) {
       var pJson = path.join(dependency, 'package.json');
       if (!visited[pJson]) {
-        const resolved = resolve.sync(
-          path.join(dependency, 'package.json'),
-          {basedir: path.join(curDir, 'node_modules')}
-        );
+        try {
+          const resolved = resolve.sync(
+            path.join(dependency, 'package.json'),
+            {basedir: path.join(curDir, 'node_modules')}
+          );
+        } catch (err) {
+            // We are forgiving on optional dependencies -- if we can't find them,
+            // just skip them
+            if (key == "optDependencies") {
+                return;
+            }
+            throw err;
+        }
         // We won't traverse transitive dependencies because this is to be used
         // only post installation, for the sake of building, and also because
         // you shouldn't be *able* to rely on binaries or environment variables

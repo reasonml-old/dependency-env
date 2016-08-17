@@ -35,24 +35,24 @@ function traverseSync(filename, handler) {
             path.join(dependency, 'package.json'),
             {basedir: path.join(curDir, 'node_modules')}
           );
+          // We won't traverse transitive dependencies because this is to be used
+          // only post installation, for the sake of building, and also because
+          // you shouldn't be *able* to rely on binaries or environment variables
+          // from dependencies you didn't model.
+          traverseSync(resolved, handler);
+          //
+          // We might want to allow two modes, however - so that transitive
+          // dependencies can build up paths for linking etc.  But if we go that
+          // far, you probably want to use a custom build system anyways.
+          visited[pJson] = true;          
         } catch (err) {
-            // We are forgiving on optional dependencies -- if we can't find them,
-            // just skip them
-            if (key == "optDependencies") {
-                return;
-            }
-            throw err;
+          // We are forgiving on optional dependencies -- if we can't find them,
+          // just skip them
+          if (key == "optDependencies") {              
+            return;
+          }
+          throw err;
         }
-        // We won't traverse transitive dependencies because this is to be used
-        // only post installation, for the sake of building, and also because
-        // you shouldn't be *able* to rely on binaries or environment variables
-        // from dependencies you didn't model.
-        traverseSync(resolved, handler);
-        //
-        // We might want to allow two modes, however - so that transitive
-        // dependencies can build up paths for linking etc.  But if we go that
-        // far, you probably want to use a custom build system anyways.
-        visited[pJson] = true;
       }
     });
   });

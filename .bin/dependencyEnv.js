@@ -13,7 +13,6 @@ var curDir = process.argv.slice(2)[0];
 
 const KEYS = [
   'dependencies',
-  'optionalDependencies',
   'peerDependencies',
 ];
 
@@ -48,7 +47,7 @@ function traverseSync(filename, handler) {
         } catch (err) {
           // We are forgiving on optional dependencies -- if we can't find them,
           // just skip them
-          if (key == "optionalDependencies") {              
+          if (pkg["optionalDependencies"] && pkg["optionalDependencies"][dependency]) {              
             return;
           }
           throw err;

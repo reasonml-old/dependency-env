@@ -15,8 +15,19 @@ const KEYS = [
   'dependencies',
   'peerDependencies',
 ];
-
 var visited = {};
+
+function resolveDep(dependency, dirs) {
+    for (var dir of dirs) {
+        try {
+            return resolve.sync(
+                path.join(dependency, 'package.json'),
+                {basedir: dir}
+            );
+        } catch (err) { }
+    }
+    throw "cannot find " + dependency + " in " + dirs;
+}
 
 function traverseSync(filename, handler) {
   const pkg = JSON.parse(
@@ -30,10 +41,7 @@ function traverseSync(filename, handler) {
       var pJson = path.join(dependency, 'package.json');
       if (!visited[pJson]) {
         try {
-          const resolved = resolve.sync(
-            path.join(dependency, 'package.json'),
-            {basedir: path.join(curDir, 'node_modules')}
-          );
+          const resolved = resolveDep(dependency, [curDir, path.dirname(filename)]);
           // We won't traverse transitive dependencies because this is to be used
           // only post installation, for the sake of building, and also because
           // you shouldn't be *able* to rely on binaries or environment variables
@@ -43,11 +51,11 @@ function traverseSync(filename, handler) {
           // We might want to allow two modes, however - so that transitive
           // dependencies can build up paths for linking etc.  But if we go that
           // far, you probably want to use a custom build system anyways.
-          visited[pJson] = true;          
+          visited[pJson] = true;
         } catch (err) {
           // We are forgiving on optional dependencies -- if we can't find them,
           // just skip them
-          if (pkg["optionalDependencies"] && pkg["optionalDependencies"][dependency]) {              
+          if (pkg["optionalDependencies"] && pkg["optionalDependencies"][dependency]) {
             return;
           }
           throw err;

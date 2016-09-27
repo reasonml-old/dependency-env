@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/npm-ml/dependency-env.git"
+    "url": "git://github.com/reasonml/dependency-env.git"
   },
   "keywords": [
     "depenency",
@@ -21,8 +21,10 @@
   "author": "jordwalke",
   "license": "MIT",
   "bugs": {
-    "url": "git://github.com/npm-ml/dependency-env/issues"
+    "url": "git://github.com/reasonml/dependency-env/issues"
   },
-  "homepage": "git://github.com/npm-ml/dependency-env"
+  "homepage": "git://github.com/reasonml/dependency-env",
+  "engines" : {
+    "npm" : ">=3.10.0"
+  }
 }
-

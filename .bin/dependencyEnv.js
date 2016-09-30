@@ -46,12 +46,12 @@ function traverseSync(filename, handler) {
           // only post installation, for the sake of building, and also because
           // you shouldn't be *able* to rely on binaries or environment variables
           // from dependencies you didn't model.
+          visited[pJson] = true;
           traverseSync(resolved, handler);
           //
           // We might want to allow two modes, however - so that transitive
           // dependencies can build up paths for linking etc.  But if we go that
           // far, you probably want to use a custom build system anyways.
-          visited[pJson] = true;
         } catch (err) {
           // We are forgiving on optional dependencies -- if we can't find them,
           // just skip them

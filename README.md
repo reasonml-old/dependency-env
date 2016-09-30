@@ -20,7 +20,7 @@ Inside your package.json:
 
 ```
 "scripts": {
-  "doStuff": ". dependencyEnv && restOfCommandHere"
+  "doStuff": "source $(dependencyEnv) && restOfCommandHere"
 }
 ```
 
@@ -38,7 +38,7 @@ we're using here - we happen to be using it to be bootstrapping creating an
 environment that uses an (arguably) better model for constructing `PATH`s and
 any other env variable.
 
-> You might want to source `. node_modules/.bin/dependencyEnv` directly in your 
+> You might want to source `source $(./node_modules/.bin/dependencyEnv)` directly in your 
 own build scripts because `npm run-script` has a large overhead.
 
 

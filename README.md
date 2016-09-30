@@ -1,4 +1,7 @@
 # dependency-env
+
+Modularized Environment Variables.
+
 Loads environment variables that dependencies declared as exported in their package.json
 
 # NOT PRODUCTION READY
@@ -118,4 +121,7 @@ setting and augmenting arbitrary environment variables.
   immediate dependencies, and they're likely to change and break you. `dependency-env`
   enforces that you've declared pacakges as dependencies in order for those
   dependencies to contribute to your scripts' `dependency-env` environment.
-
+- `npm`'s `bin` feature requires that you list the binaries to expose, before
+  your `postinstall` script even runs. Furthermore, those binaries need to
+  *exist* before the `postinstall` is executed. That's not good for compiled
+  packages because `postinstall` is the thing that will generate those binaries.

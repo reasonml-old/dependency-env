@@ -109,3 +109,13 @@ setting and augmenting arbitrary environment variables.
   provides a way to not *need* `run-script` to correctly wire up paths to
   binaries that your deps publish if your dependencies configure `PATH` using
   `dependency-env`.
+- On windows, `npm`'s `bin` features might only be able to link entire directories,
+  not specific binary files (on some network mount file systems). It's not like
+  `dependency-env` works on windows, but it could pretty easily and it's set up
+  to do that since it doesn't rely on symlinks.
+- `npm`'s `bin` feature allows you to rely on binaries produced by your transitive
+  dependencies. Those transitive dependencies might be implementation details of your
+  immediate dependencies, and they're likely to change and break you. `dependency-env`
+  enforces that you've declared pacakges as dependencies in order for those
+  dependencies to contribute to your scripts' `dependency-env` environment.
+

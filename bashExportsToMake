@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+read input
+IFS="&&"
+for i in $input
+do
+   echo $i | sed "s/\"//g" \
+   | sed "s/=/:=/g" \
+   | sed -E "s/\\\$\((.*)\)/\$(shell \1)/" \
+   | sed -E "s/\\\$([a-zA-Z0-9]+)/\$(\1)/" \
+   | sed -E "s/\\\$([a-zA-Z0-9]+)/\$(\1)/" \
+   | sed -e 's/[ \t]*$//' \
+   | sed -e 's/^[ \t]*//' \
+   | sed '/^$/d'
+done

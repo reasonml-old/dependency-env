@@ -4,7 +4,7 @@ IFS="&&"
 for i in $input
 do
    echo $i | sed "s/\"//g" \
-   | sed "s/=/:=/g" \
+   | sed "s/=/:=/" \
    | sed -E "s/\\\$\((.*)\)/\$(shell \1)/" \
    | sed -E "s/\\\$([a-zA-Z0-9]+)/\$(\1)/" \
    | sed -E "s/\\\$([a-zA-Z0-9]+)/\$(\1)/" \

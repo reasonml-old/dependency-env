@@ -6,6 +6,9 @@
     "dependencyEnv": ".bin/dependencyEnv",
     "envExports": ".bin/dependencyEnv",
     "envRun": ".bin/envRun",
+    "envbash": ".bin/envbash",
+    "envfish": ".bin/envfish",
+    "envzsh": ".bin/envzsh",
     "bashExportsToMake": "./bashExportsToMake"
   },
   "dependencies": {

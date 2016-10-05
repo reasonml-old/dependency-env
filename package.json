@@ -4,7 +4,8 @@
   "description": "Loads environment variables that dependencies declared as exported in their package.json",
   "bin" : {
     "dependencyEnv": ".bin/dependencyEnv",
-    "withDep": ".bin/withDep",
+    "envExports": ".bin/dependencyEnv",
+    "envRun": ".bin/envRun",
     "bashExportsToMake": "./bashExportsToMake"
   },
   "dependencies": {

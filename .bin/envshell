@@ -10,19 +10,15 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 export OLD_PS1="$PS1"
 
-# export PROMPT="%{%F{red}%}[RE]%{%f%}$PROMPT"
-
-
-
-if [ -n "${ZSH_VERSION-}" ]; then
-    export PS1="%{%F{red}%}[RE]%{%f%}$PROMPT"
-else
-    export PS1="\[\033[0;31m\][RE]\[\033[0m\]$PS1"
-fi
-
 export OLD_PATH="$PATH"
 
 export OLD_PROMPT="$PROMPT"
+
+if [ -n "${ZSH_VERSION-}" ]; then
+    export PS1="%{%F{red}%}[RE]%{%f%}$PS1"
+else
+    export PS1="\[\033[0;31m\][RE]\[\033[0m\]$PS1"
+fi
 
 deactivate () {
     PS1="$OLD_PS1"

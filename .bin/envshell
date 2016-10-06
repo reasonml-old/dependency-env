@@ -8,10 +8,26 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-OLD_ZSHPROMPT=$(zsh -i $DIR/zshprompt)
+export OLD_PS1="$PS1"
 
-export PROMPT="%{%F{red}%}[RE]%{%f%}$OLD_ZSHPROMPT"
+# export PROMPT="%{%F{red}%}[RE]%{%f%}$PROMPT"
 
-eval $($DIR/dependencyEnv)
 
-zsh
+
+if [ -n "${ZSH_VERSION-}" ]; then
+    export PS1="%{%F{red}%}[RE]%{%f%}$PROMPT"
+else
+    export PS1="\[\033[0;31m\][RE]\[\033[0m\]$PS1"
+fi
+
+export OLD_PATH="$PATH"
+
+export OLD_PROMPT="$PROMPT"
+
+deactivate () {
+    PS1="$OLD_PS1"
+    PATH="$OLD_PATH"
+    PROMPT="$OLD_PROMPT"
+}
+
+eval $(dependencyEnv)

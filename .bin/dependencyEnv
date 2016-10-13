@@ -10,6 +10,15 @@ done
 SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 CURDIR=`pwd`
+
+while [ ! -e "$CURDIR/package.json" ]; do
+    if [ "$CURDIR" == "/" ]; then
+        echo "Cannot find package.json" >&2
+        exit 1
+    fi
+    CURDIR=`cd $CURDIR/..; pwd`
+done
+
 SETENVCMD=`node $SCRIPTDIR/dependencyEnv.js $CURDIR`
 # Use like this:
 # $(dependencyEnv) && command

@@ -68,7 +68,8 @@ function traverseSync(filename, handler) {
 
 var cmds = [];
 var seenVars = {};
-traverseSync(path.join(curDir, 'package.json'), function(filePath, packageJson) {
+
+function traverse(filePath, packageJson) {
   var packageJsonDir = path.dirname(filePath);
   var envPaths = packageJson.exportedEnvVars;
   var packageName = packageJson.name;
@@ -127,7 +128,17 @@ traverseSync(path.join(curDir, 'package.json'), function(filePath, packageJson) 
     }
     seenVars[envVar] = true;
   }
-});
+}
+
+try {
+  traverseSync(path.join(curDir, 'package.json'), traverse);
+} catch (err) {
+  if (err.code === 'ENOENT') {
+    console.error("Fail to find package.json!: " + err.message);
+  } else {
+    throw err;
+  }
+}
 console.log(cmds.join(" && "));
 
 /**

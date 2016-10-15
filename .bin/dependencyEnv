@@ -10,7 +10,6 @@ done
 SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 CURDIR=`pwd`
-
 while [ ! -e "$CURDIR/package.json" ]; do
     if [ "$CURDIR" == "/" ]; then
         echo "Cannot find package.json" >&2
@@ -19,7 +18,16 @@ while [ ! -e "$CURDIR/package.json" ]; do
     CURDIR=`cd $CURDIR/..; pwd`
 done
 
-SETENVCMD=`node $SCRIPTDIR/dependencyEnv.js $CURDIR`
+
+# Capture the error output
+# Capturing stderr is very important to prevent nodejs from setting
+# stderr to nonblocking mode
+SETENVCMD=$($SCRIPTDIR/dependencyEnv.js $CURDIR 2>&1)
+if [ $? -ne 0 ]; then
+    echo "Failed to get dependency:"
+    printf "%s\n" "$SETENVCMD" >&2
+    exit 1
+fi
 # Use like this:
 # $(dependencyEnv) && command
 echo $SETENVCMD

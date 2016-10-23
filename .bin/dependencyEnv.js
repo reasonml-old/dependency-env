@@ -79,7 +79,7 @@ function traverse(filePath, packageJson) {
       continue;
     }
 
-    var errorPrefix = "environment variable " + envVar + " from dependency package " + filePath;
+    var errorPrefix = "environment variable " + envVar + " (which " + filePath + " is trying to set) ";
     var config = envPaths[envVar];
     if (!config.global) {
       if (envVar.indexOf(envVarScopePrefix) !== 0) {
@@ -107,9 +107,8 @@ function traverse(filePath, packageJson) {
     if (seenVars[envVar] && (config.globalCollisionBehavior === 'fail' || config.globalCollisionBehavior == null)) {
       throw new Error(
         errorPrefix +
-          " is a global environment variable that has already been set by some other package and " +
-          "it is configured with " +
-          "globalCollisionBehavior='fail' (which is the default behavior)."
+          "has already been set by " + seenVars[envVar] +
+          " and " + packageName + " has configured it with globalCollisionBehavior='fail' (which is the default)."
       );
     }
     if (config.globalCollisionBehavior === 'fail' ||
@@ -125,7 +124,7 @@ function traverse(filePath, packageJson) {
           config.globalCollisionBehavior + "."
       );
     }
-    seenVars[envVar] = true;
+    seenVars[envVar] = filePath || 'unknownPackage';
   }
 }
 

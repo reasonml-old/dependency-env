@@ -33,7 +33,6 @@ function traverseSync(absolutePathToPackageJson, handler) {
   const pkg = JSON.parse(
     fs.readFileSync(absolutePathToPackageJson, 'utf8')
   );
-  handler(absolutePathToPackageJson, pkg);
   KEYS.forEach(function(key) {
     Object.keys(
       pkg[key] || {}
@@ -62,6 +61,7 @@ function traverseSync(absolutePathToPackageJson, handler) {
       }
     });
   });
+  handler(absolutePathToPackageJson, pkg);
 }
 
 

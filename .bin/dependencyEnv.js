@@ -29,24 +29,23 @@ function resolveDep(dependency, dirs) {
     throw "cannot find " + dependency + " in " + dirs;
 }
 
-function traverseSync(filename, handler) {
+function traverseSync(absolutePathToPackageJson, handler) {
   const pkg = JSON.parse(
-    fs.readFileSync(filename, 'utf8')
+    fs.readFileSync(absolutePathToPackageJson, 'utf8')
   );
-  handler(filename, pkg);
+  handler(absolutePathToPackageJson, pkg);
   KEYS.forEach(function(key) {
     Object.keys(
       pkg[key] || {}
-    ).forEach(function(dependency) {
-      var pJson = path.join(dependency, 'package.json');
-      if (!visited[pJson]) {
+    ).forEach(function(dependencyName) {
+      if (!visited[dependencyName]) {
         try {
-          const resolved = resolveDep(dependency, [curDir, path.dirname(filename)]);
+          const resolved = resolveDep(dependencyName, [curDir, path.dirname(absolutePathToPackageJson)]);
           // We won't traverse transitive dependencies because this is to be used
           // only post installation, for the sake of building, and also because
           // you shouldn't be *able* to rely on binaries or environment variables
           // from dependencies you didn't model.
-          visited[pJson] = true;
+          visited[dependencyName] = true;
           traverseSync(resolved, handler);
           //
           // We might want to allow two modes, however - so that transitive
@@ -55,7 +54,7 @@ function traverseSync(filename, handler) {
         } catch (err) {
           // We are forgiving on optional dependencies -- if we can't find them,
           // just skip them
-          if (pkg["optionalDependencies"] && pkg["optionalDependencies"][dependency]) {
+          if (pkg["optionalDependencies"] && pkg["optionalDependencies"][dependencyName]) {
             return;
           }
           throw err;

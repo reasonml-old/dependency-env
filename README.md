@@ -10,17 +10,16 @@ Loads environment variables that dependencies declared as exported in their pack
 
 > Bring the sandboxing model to environment variables.
 
-> If you add `dependency-env` to your `dependencies`, then you can source `dependencyEnv`
+> If you add `dependency-env` to your `dependencies`, then you can eval `dependencyEnv`
 > in any of your npm `scripts`, and it will ensure that your immediate dependencies
 > (and *only* your immediate dependencies) can set environment variables that
-> are set only for the remainder of that one script. You must use the `. ` syntax to
-> "source" `dependencyEnv`.
+> are set only for the remainder of that one script.
 
 Inside your package.json:
 
 ```
 "scripts": {
-  "doStuff": "source $(dependencyEnv) && restOfCommandHere"
+  "doStuff": "eval $(dependencyEnv) && restOfCommandHere"
 }
 ```
 
@@ -38,7 +37,7 @@ we're using here - we happen to be using it to be bootstrapping creating an
 environment that uses an (arguably) better model for constructing `PATH`s and
 any other env variable.
 
-> You might want to source `source $(./node_modules/.bin/dependencyEnv)` directly in your 
+> You might want to eval `eval $(./node_modules/.bin/dependencyEnv)` directly in your 
 own build scripts because `npm run-script` has a large overhead.
 
 

@@ -70,7 +70,7 @@ var seenVars = {};
 
 // Transform a (key, value) pair to the form of "export key=value"
 function envVarToExport(key, value) {
-  return "export " + key + '="' + value;
+  return "export " + key + '="' + value + '"';
 }
 
 function traverse(filePath, packageJson) {

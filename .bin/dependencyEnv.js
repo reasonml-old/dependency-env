@@ -68,6 +68,11 @@ function traverseSync(absolutePathToPackageJson, handler) {
 var cmds = [];
 var seenVars = {};
 
+// Transform a (key, value) pair to the form of "export key=value"
+function envVarToExport(key, value) {
+  return "export " + key + '="' + value;
+}
+
 function traverse(filePath, packageJson) {
   var packageJsonDir = path.dirname(filePath);
   var envPaths = packageJson.exportedEnvVars;
@@ -128,6 +133,12 @@ function traverse(filePath, packageJson) {
   }
 }
 
+
+function setUpBuiltinVariables() {
+  cmds.push(envVarToExport("__dependencyEnv_sandbox", curDir));
+}
+
+setUpBuiltinVariables();
 try {
   traverseSync(path.join(curDir, 'package.json'), traverse);
 } catch (err) {

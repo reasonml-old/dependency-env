@@ -14,6 +14,10 @@ export OLD_PATH="$PATH"
 
 export OLD_PROMPT="$PROMPT"
 
+export OLD_FINDLIB="$FINDLIB"
+
+export PATH="$DIR:$PATH"
+
 if [ -n "${ZSH_VERSION-}" ]; then
     export PS1="%{%F{red}%}[RE]%{%f%}$PS1"
 else
@@ -24,6 +28,7 @@ deactivate () {
     PS1="$OLD_PS1"
     PATH="$OLD_PATH"
     PROMPT="$OLD_PROMPT"
+    FINDLIB="$OLD_FINDLIB"
 }
 
 eval $(dependencyEnv)

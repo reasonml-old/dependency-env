@@ -18,10 +18,6 @@ while [ ! -e "$CURDIR/package.json" ]; do
     CURDIR=`cd $CURDIR/..; pwd`
 done
 
-if type -t deactivate > /dev/null; then
-    deactivate
-fi
-
 # Capture the error output
 # Capturing stderr is very important to prevent nodejs from setting
 # stderr to nonblocking mode

@@ -29,10 +29,10 @@ else
 fi
 
 deactivate () {
-    PS1="$OLD_PS1"
-    PATH="$OLD_PATH"
-    PROMPT="$OLD_PROMPT"
-    FINDLIB="$OLD_FINDLIB"
+    export PS1="$OLD_PS1"
+    export PATH="$OLD_PATH"
+    export PROMPT="$OLD_PROMPT"
+    export FINDLIB="$OLD_FINDLIB"
 }
 
 eval $(dependencyEnv)

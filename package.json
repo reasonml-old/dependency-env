@@ -1,8 +1,8 @@
 {
   "name": "dependency-env",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Loads environment variables that dependencies declared as exported in their package.json",
-  "bin" : {
+  "bin": {
     "dependencyEnv": ".bin/dependencyEnv",
     "envExports": ".bin/dependencyEnv",
     "envRun": ".bin/envRun",
@@ -29,7 +29,7 @@
     "url": "git://github.com/reasonml/dependency-env/issues"
   },
   "homepage": "git://github.com/reasonml/dependency-env",
-  "engines" : {
-    "npm" : ">=3.10.0"
+  "engines": {
+    "npm": ">=3.10.0"
   }
 }

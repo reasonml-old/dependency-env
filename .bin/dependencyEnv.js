@@ -11,7 +11,23 @@ if (process.argv.length !== 3) {
 
 var curDir = process.argv.slice(2)[0];
 
-const KEYS = [
+/**
+ * We consider environment variables from devDependencies, only for the top
+ * level package/app. There's still some tricky logic here because these
+ * dependencies may not be installed when in production mode, so we need to
+ * gracefully recover if we can't find them.
+ *
+ * This also means you need to be very careful when writing run scripts - never
+ * assume devDependencies' environment variables will be there when running in
+ * production mode.
+ */
+const FIRST_HOP_KEYS = [
+  'devDependencies',
+  'dependencies',
+  'peerDependencies',
+];
+
+const SECOND_HOP_KEYS = [
   'dependencies',
   'peerDependencies',
 ];
@@ -29,11 +45,11 @@ function resolveDep(dependency, dirs) {
     throw "cannot find " + dependency + " in " + dirs;
 }
 
-function traverseSync(absolutePathToPackageJson, handler) {
+function traverseSync(kindsOfDependencies, absolutePathToPackageJson, handler) {
   const pkg = JSON.parse(
     fs.readFileSync(absolutePathToPackageJson, 'utf8')
   );
-  KEYS.forEach(function(key) {
+  kindsOfDependencies.forEach(function(key) {
     Object.keys(
       pkg[key] || {}
     ).forEach(function(dependencyName) {
@@ -45,15 +61,18 @@ function traverseSync(absolutePathToPackageJson, handler) {
           // you shouldn't be *able* to rely on binaries or environment variables
           // from dependencies you didn't model.
           visited[dependencyName] = true;
-          traverseSync(resolved, handler);
+          traverseSync(SECOND_HOP_KEYS, resolved, handler);
           //
           // We might want to allow two modes, however - so that transitive
           // dependencies can build up paths for linking etc.  But if we go that
           // far, you probably want to use a custom build system anyways.
         } catch (err) {
           // We are forgiving on optional dependencies -- if we can't find them,
-          // just skip them
-          if (pkg["optionalDependencies"] && pkg["optionalDependencies"][dependencyName]) {
+          // just skip them.
+          // Dev dependencies won't be installed for transitive dependencies, and they
+          // won't be installed for the top levle app in prod mode.
+          if (pkg["optionalDependencies"] && pkg["optionalDependencies"][dependencyName] ||
+              pkg["devDependencies"] && pkg["devDependencies"][dependencyName]) {
             return;
           }
           throw err;
@@ -140,7 +159,7 @@ function setUpBuiltinVariables() {
 
 setUpBuiltinVariables();
 try {
-  traverseSync(path.join(curDir, 'package.json'), traverse);
+  traverseSync(FIRST_HOP_KEYS, path.join(curDir, 'package.json'), traverse);
 } catch (err) {
   if (err.code === 'ENOENT') {
     console.error("Fail to find package.json!: " + err.message);

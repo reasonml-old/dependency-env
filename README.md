@@ -4,6 +4,10 @@ Modularized Environment Variables.
 
 Loads environment variables that dependencies declared as exported in their package.json
 
+```sh
+npm install --save dependency-env
+```
+
 # NOT PRODUCTION READY
 
 ### Idea:

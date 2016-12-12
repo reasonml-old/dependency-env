@@ -1,6 +1,6 @@
 {
   "name": "dependency-env",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Loads environment variables that dependencies declared as exported in their package.json",
   "bin": {
     "dependencyEnv": ".bin/dependencyEnv",
